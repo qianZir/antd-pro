@@ -1,7 +1,7 @@
 // https://umijs.org/config/
 import { defineConfig } from 'umi';
 import defaultSettings from './defaultSettings';
-import proxy from './proxy';
+
 import pageRoutes from './router';
 const { REACT_APP_ENV } = process.env;
 
@@ -36,7 +36,13 @@ export default defineConfig({
     'primary-color': defaultSettings.primaryColor,
   },
   ignoreMomentLocale: true,
-  proxy: proxy[REACT_APP_ENV || 'dev'],
+  proxy: {
+    '/api': {
+      target: 'http://localhost:3000',
+      changeOrigin: true,
+      ...(!REACT_APP_ENV ? { pathRewrite: { '^/api': '' } } : ''),
+    },
+  },
   manifest: {
     basePath: '/',
   },

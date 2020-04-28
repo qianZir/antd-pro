@@ -56,17 +56,19 @@ const Login: React.FC<LoginProps> = (props) => {
     setSubmitting(true);
     try {
       // 登录
-      const msg = await fakeAccountLogin({...values});
-      if (msg.status === 'ok') {
+      const response:any = await fakeAccountLogin({...values});
+      if (response.code === 0) {
         message.success('登陆成功！');
         replaceGoto();
         setTimeout(() => {
           refresh();
         }, 0);
         return;
+      }else {
+        message.error(response.msg);
       }
       // 如果失败去设置用户错误信息
-      setUserLoginState(msg);
+      setUserLoginState(response);
     } catch (error) {
       message.error('登陆失败，请重试！');
     }
@@ -78,38 +80,40 @@ const Login: React.FC<LoginProps> = (props) => {
   return (
     <div className={styles.container}>
       <div className={styles.content}>
-
         <div className={styles.main}>
-          <Form
-            form={props.from}
-            onFinish={(values) => {
-              handleSubmit(values as LoginParamsType)
-            }}
-          >
-            {status === 'error' && loginType === 'account' && !submitting && (
-              <LoginMessage content="账户或密码错误（admin/ant.design）"/>
-            )}
-            <Form.Item
-              label="Username"
-              name="username"
-              rules={[{required: true, message: 'Please input your username!'}]}
+          <h1>qianZir~</h1>
+          <div className={styles.formContainer}>
+            <Form
+              hideRequiredMark={true}
+              form={props.from}
+              onFinish={(values) => {
+                handleSubmit(values as LoginParamsType)
+              }}
             >
-              <Input/>
-            </Form.Item>
-            <Form.Item
-              label="Password"
-              name="password"
-              rules={[{required: true, message: 'Please input your password!'}]}
-            >
-              <Input.Password/>
-            </Form.Item>
+              {status === 'error' && loginType === 'account' && !submitting && (
+                <LoginMessage content="账户或密码错误（admin/ant.design）"/>
+              )}
+              <Form.Item
+                label="账号"
+                name="username"
+                rules={[{required: true, message: 'Please input your username!'}]}
+              >
+                <Input/>
+              </Form.Item>
+              <Form.Item
+                label="密码"
+                name="password"
+                rules={[{required: true, message: 'Please input your password!'}]}
+              >
+                <Input.Password/>
+              </Form.Item>
 
-            <Form.Item>
-              <Button className={styles.submit} type="primary" htmlType="submit" >登录</Button>
-            </Form.Item>
+              <Form.Item>
+                <Button className={styles.submit} type="primary" htmlType="submit">登录</Button>
+              </Form.Item>
 
-          </Form>
-
+            </Form>
+          </div>
         </div>
       </div>
     </div>

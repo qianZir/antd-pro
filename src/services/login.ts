@@ -1,17 +1,16 @@
 import { request } from 'umi';
-
+const crypto = require("crypto"); //node自带的密码加密
 export interface LoginParamsType {
   userName: string;
   password: string;
-  mobile: string;
-  captcha: string;
-  type: string;
 }
 
 export async function fakeAccountLogin(params: LoginParamsType) {
-  return request<API.LoginStateType>('/api/login/account', {
+  let md5 = crypto.createHash("md5");
+  params.password = md5.update(params.password).digest("hex");
+  return request<API.LoginStateType>('/api/users/addUserAction', {
     method: 'POST',
-    data: params,
+    params: params,
   });
 }
 
