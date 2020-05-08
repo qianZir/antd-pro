@@ -7,6 +7,7 @@ const { REACT_APP_ENV } = process.env;
 
 export default defineConfig({
   hash: true,
+  history: { type: 'hash' },
   antd: {},
   dva: {
     hmr: true,
@@ -42,6 +43,11 @@ export default defineConfig({
       changeOrigin: true,
       ...(!REACT_APP_ENV ? { pathRewrite: { '^/api': '' } } : ''),
     },
+    '/test': {
+      target: 'http://localhost:3000',
+      changeOrigin: true,
+      ...(!REACT_APP_ENV ? { pathRewrite: { '^/test': '' } } : ''),
+    }
   },
   manifest: {
     basePath: '/',

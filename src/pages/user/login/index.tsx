@@ -1,23 +1,11 @@
-import {Alert, message, Form, Input, Button} from 'antd';
-import React, {useState} from 'react';
+import { message, Form, Input, Button} from 'antd';
+import React from 'react';
 import {history, useModel} from 'umi';
 import {FormInstance} from 'antd/es/form';
 import {getPageQuery} from '@/utils/utils';
 import {LoginParamsType, fakeAccountLogin} from '@/services/login';
 import styles from './style.less';
 
-const LoginMessage: React.FC<{
-  content: string;
-}> = ({content}) => (
-  <Alert
-    style={{
-      marginBottom: 24,
-    }}
-    message={content}
-    type="error"
-    showIcon
-  />
-);
 
 /**
  * 此方法会跳转到 redirect 参数所在的位置
@@ -47,13 +35,11 @@ export interface LoginProps {
 
 
 const Login: React.FC<LoginProps> = (props) => {
-  const [userLoginState, setUserLoginState] = useState<API.LoginStateType>({});
-  const [submitting, setSubmitting] = useState(false);
+
   const {refresh} = useModel('@@initialState');
 
 
   const handleSubmit = async (values: LoginParamsType) => {
-    setSubmitting(true);
     try {
       // 登录
       const response:any = await fakeAccountLogin({...values});
@@ -68,14 +54,11 @@ const Login: React.FC<LoginProps> = (props) => {
         message.error(response.msg);
       }
       // 如果失败去设置用户错误信息
-      setUserLoginState(response);
     } catch (error) {
       message.error('登陆失败，请重试！');
     }
-    setSubmitting(false);
   };
 
-  const {status, type: loginType} = userLoginState;
 
   return (
     <div className={styles.container}>
@@ -90,9 +73,7 @@ const Login: React.FC<LoginProps> = (props) => {
                 handleSubmit(values as LoginParamsType)
               }}
             >
-              {status === 'error' && loginType === 'account' && !submitting && (
-                <LoginMessage content="账户或密码错误（admin/ant.design）"/>
-              )}
+
               <Form.Item
                 label="账号"
                 name="username"
